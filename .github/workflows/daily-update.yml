@@ -1,6 +1,11 @@
 name: Daily sociology reading
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/daily_update.py"
+      - "tests/test_daily_update.py"
   schedule:
     # GitHub cron uses UTC. 23:00 UTC is 07:00 Asia/Taipei the next day.
     - cron: "0 23 * * *"
