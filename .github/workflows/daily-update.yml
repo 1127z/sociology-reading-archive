@@ -52,7 +52,7 @@ jobs:
           cache: npm
       - name: Verify website build
         run: |
-          npm install --no-audit --no-fund
+          npm install --ignore-scripts --no-audit --no-fund
           npm run typecheck
           npm test
           npm run build
