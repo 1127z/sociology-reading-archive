@@ -1,3 +1,6 @@
+Exit code: 0
+Wall time: 0.3 seconds
+Output:
 export type Article = {
   slug: string;
   date: string;
@@ -16,6 +19,8 @@ export type Article = {
   method: "质性研究" | "定量研究" | "综述" | "混合研究";
   topics: string[];
   recommendation: string;
+  selectionSource?: string;
+  articleStructure?: string[];
   question: string;
   thesis: string;
   theory: { name: string; detail: string }[];
@@ -170,3 +175,4 @@ export const articles: Article[] = [
 ];
 
 export const getArticle = (slug: string) => articles.find((article) => article.slug === slug);
+
