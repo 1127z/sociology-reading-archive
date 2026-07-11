@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.3 seconds
-Output:
 #!/usr/bin/env python3
 """Retrieve, deduplicate, summarize, and publish one sociology reading."""
 

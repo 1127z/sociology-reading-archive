@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.3 seconds
-Output:
 import { desc, eq } from "drizzle-orm";
 import { articles as seedArticles, type Article } from "../app/data";
 import generatedArticles from "../data/articles.generated.json";

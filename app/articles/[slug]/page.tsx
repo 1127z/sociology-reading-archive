@@ -1,6 +1,3 @@
-Exit code: 0
-Wall time: 0.3 seconds
-Output:
 import { notFound } from "next/navigation";
 import { NotePad, ReadingToggle, SiteFooter, SiteHeader } from "../../components";
 import { findArticle } from "../../../db/repository";
