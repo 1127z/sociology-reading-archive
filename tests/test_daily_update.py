@@ -23,6 +23,9 @@ class DailyUpdateTests(unittest.TestCase):
     def test_slugify_is_url_safe(self):
         self.assertEqual(MODULE.slugify("Social Life & Inequality!"), "social-life-inequality")
 
+    def test_empty_candidate_set_is_safe(self):
+        self.assertIsNone(MODULE.choose_candidate([], set(), set()))
+
 
 if __name__ == "__main__":
     unittest.main()
