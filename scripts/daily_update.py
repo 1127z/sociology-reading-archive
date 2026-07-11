@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Retrieve, deduplicate, summarize, and publish one sociology reading."""
+"""Retrieve, deduplicate, summarize, and publish one sociology reading.
+
+Designed for both the daily schedule and script-change CI checks.
+"""
 
 from __future__ import annotations
 
