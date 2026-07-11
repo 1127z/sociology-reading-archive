@@ -35,6 +35,11 @@ class DailyUpdateTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             MODULE.validate_expert_summary(summary)
 
+    def test_selection_source_is_factual(self):
+        source = MODULE.selection_source({"provider": "OpenAlex"})
+        self.assertIn("OpenAlex", source)
+        self.assertNotIn("专家推荐", source)
+
 
 if __name__ == "__main__":
     unittest.main()

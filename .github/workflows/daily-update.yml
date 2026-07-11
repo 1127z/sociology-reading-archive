@@ -34,7 +34,11 @@ jobs:
           python-version: "3.12"
       - name: Run unit tests
         run: python -m unittest discover -s tests -p "test_*.py"
+      - name: Check retrieval on code changes
+        if: github.event_name == 'push'
+        run: python scripts/daily_update.py --dry-run
       - name: Retrieve and generate one reading
+        if: github.event_name != 'push'
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: python scripts/daily_update.py

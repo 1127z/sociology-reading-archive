@@ -158,7 +158,12 @@ def deepseek_summary(candidate: dict, api_key: str) -> dict:
     schema = {"title": "中文标题", "topics": ["主题"], "recommendation": "专家推荐理由", "question": "研究问题", "selectionSource": "选题如何形成", "articleStructure": ["可由当前证据确认的结构；不确定则说明"], "thesis": "核心论点", "theory": [{"name": "概念或理论", "detail": "定义、关系与机制"}], "chain": [{"label": "论证步骤", "detail": "证据如何支持命题"}], "findings": ["区分直接发现、解释与外推"], "highlights": [{"label": "亮点", "detail": "说明"}], "questions": ["研究者思考题"], "terms": [{"term": "术语", "definition": "定义"}]}
     synthesis_prompt = "你是社会学精读主编。整合证据、领域专家意见和方法审稿意见，输出纯JSON并严格匹配模板。不得新增证据中没有的事实。\n模板：" + json.dumps(schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False) + "\n领域专家：" + json.dumps(expert, ensure_ascii=False) + "\n方法审稿：" + json.dumps(reviewer, ensure_ascii=False)
     synthesis = deepseek_json(api_key, "建立可追溯的论断—证据链，明确事实、解释、外推和未知。", synthesis_prompt)
+    synthesis["selectionSource"] = selection_source(candidate)
     return {**synthesis, **expert, **reviewer, "evidenceBasis": candidate["evidenceBasis"], "analysisDepth": candidate["analysisDepth"], "fullTextSource": candidate["fullTextSource"], "confidence": candidate["confidence"]}
+
+
+def selection_source(candidate: dict) -> str:
+    return f"由自动检索流程从近期公开元数据中筛选；来源为{candidate.get('provider', '公开数据库')}，满足社会学主题、文章类型、摘要完整性与去重规则。"
 
 
 def slugify(title: str) -> str:
