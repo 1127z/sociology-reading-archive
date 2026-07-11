@@ -16,6 +16,20 @@ export type Article = {
   method: "质性研究" | "定量研究" | "综述" | "混合研究";
   topics: string[];
   recommendation: string;
+  evidenceBasis?: "全文" | "摘要";
+  analysisDepth?: "专家精读" | "摘要解读";
+  fullTextSource?: string;
+  confidence?: "高" | "中" | "低";
+  fieldPosition?: string;
+  literatureDialogue?: string[];
+  empiricalContribution?: string;
+  theoreticalContribution?: string;
+  methodologicalContribution?: string;
+  contentFeatures?: { label: string; detail: string }[];
+  researchFeatures?: { label: string; detail: string }[];
+  criticalReview?: string[];
+  researchImplications?: string[];
+  evidenceBoundaries?: string[];
   selectionSource?: string;
   articleStructure?: string[];
   question: string;
@@ -172,4 +186,5 @@ export const articles: Article[] = [
 ];
 
 export const getArticle = (slug: string) => articles.find((article) => article.slug === slug);
+
 

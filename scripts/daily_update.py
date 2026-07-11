@@ -22,6 +22,7 @@ DATA_FILE = ROOT / "data" / "articles.generated.json"
 SEED_FILE = ROOT / "app" / "data.ts"
 DOCUMENT_DIR = ROOT / "public" / "documents"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
+MAX_EVIDENCE_CHARS = 60000
 
 
 def request_json(url: str, *, headers: dict[str, str] | None = None, body: dict | None = None) -> dict:
@@ -29,6 +30,19 @@ def request_json(url: str, *, headers: dict[str, str] | None = None, body: dict 
     req = urllib.request.Request(url, data=payload, headers={"User-Agent": "sociology-reading-archive/1.0", **(headers or {})})
     with urllib.request.urlopen(req, timeout=45) as response:
         return json.load(response)
+
+
+def request_text(url: str) -> tuple[str, str]:
+    req = urllib.request.Request(url, headers={"User-Agent": "sociology-reading-archive/1.0"})
+    with urllib.request.urlopen(req, timeout=45) as response:
+        content_type = response.headers.get_content_type()
+        if content_type not in {"text/html", "text/plain", "application/xhtml+xml"}:
+            return "", content_type
+        text = response.read(2_000_000).decode(response.headers.get_content_charset() or "utf-8", errors="replace")
+        text = re.sub(r"<(script|style|nav|header|footer)[^>]*>.*?</\1>", " ", text, flags=re.I | re.S)
+        text = html.unescape(re.sub(r"<[^>]+>", " ", text))
+        text = re.sub(r"\s+", " ", text).strip()
+        return text[:MAX_EVIDENCE_CHARS], content_type
 
 
 def normalize_title(value: str) -> str:
@@ -58,13 +72,14 @@ def openalex_candidates(days: int = 21) -> list[dict]:
         "filter": f"from_publication_date:{since},concepts.id:C144024400,type:article|review",
         "sort": "cited_by_count:desc",
         "per-page": 25,
-        "select": "id,doi,title,publication_date,authorships,primary_location,open_access,abstract_inverted_index,cited_by_count,type",
+        "select": "id,doi,title,publication_date,authorships,primary_location,best_oa_location,open_access,abstract_inverted_index,cited_by_count,type",
     })
     payload = request_json(f"https://api.openalex.org/works?{params}")
     result = []
     for work in payload.get("results", []):
         location = work.get("primary_location") or {}
         source = location.get("source") or {}
+        oa_location = work.get("best_oa_location") or {}
         abstract = abstract_from_inverted(work.get("abstract_inverted_index"))
         relevance_text = f"{work.get('title', '')} {source.get('display_name', '')} {abstract}".lower()
         relevance_terms = ("sociolog", "social stratification", "social inequality", "social movement", "social class", "social network", "social institution", "ethnograph", "race and ethnicity", "gender inequality")
@@ -83,6 +98,8 @@ def openalex_candidates(days: int = 21) -> list[dict]:
             "abstract": abstract,
             "citations": work.get("cited_by_count", 0),
             "type": work.get("type", "article"),
+            "fullTextUrl": oa_location.get("landing_page_url") or "",
+            "pdfUrl": oa_location.get("pdf_url") or "",
         })
     return result
 
@@ -108,12 +125,40 @@ def choose_candidate(candidates: list[dict], dois: set[str], titles: set[str]) -
     return fresh[0] if fresh else None
 
 
-def deepseek_summary(candidate: dict, api_key: str) -> dict:
-    schema = {"title": "中文标题", "method": "质性研究|定量研究|综述|混合研究", "topics": ["主题"], "recommendation": "推荐理由", "question": "研究问题", "selectionSource": "选题来源", "articleStructure": ["文章结构"], "thesis": "核心论点", "theory": [{"name": "理论", "detail": "说明"}], "methods": ["数据与方法"], "chain": [{"label": "步骤", "detail": "分析思路"}], "findings": ["结论"], "highlights": [{"label": "亮点", "detail": "说明"}], "limits": ["局限"], "questions": ["思考题"], "terms": [{"term": "术语", "definition": "定义"}]}
-    prompt = "你是严谨的社会学文献编辑。只能依据给定元数据和摘要，不得声称读过未提供的全文；信息不足时明确写‘摘要未说明’。输出纯 JSON，字段完全匹配模板。\n模板：" + json.dumps(schema, ensure_ascii=False) + "\n文献：" + json.dumps(candidate, ensure_ascii=False)
-    body = {"model": "deepseek-chat", "temperature": 0.2, "response_format": {"type": "json_object"}, "messages": [{"role": "system", "content": "输出可核验、克制、中文的社会学精读。"}, {"role": "user", "content": prompt}]}
+def add_evidence(candidate: dict) -> dict:
+    enriched = dict(candidate)
+    full_text = ""
+    source = candidate.get("fullTextUrl", "")
+    if source:
+        try:
+            full_text, _ = request_text(source)
+        except Exception as error:
+            print(f"Full-text HTML unavailable: {type(error).__name__}")
+    if len(full_text) >= 5000:
+        enriched.update({"evidenceBasis": "全文", "analysisDepth": "专家精读", "fullTextSource": source, "evidenceText": full_text, "confidence": "高"})
+    else:
+        enriched.update({"evidenceBasis": "摘要", "analysisDepth": "摘要解读", "fullTextSource": candidate.get("pdfUrl") or source or "未获得合法可解析全文", "evidenceText": candidate.get("abstract", ""), "confidence": "中"})
+    return enriched
+
+
+def deepseek_json(api_key: str, system: str, prompt: str) -> dict:
+    body = {"model": "deepseek-chat", "temperature": 0.15, "response_format": {"type": "json_object"}, "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}]}
     payload = request_json(DEEPSEEK_URL, headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}, body=body)
     return json.loads(payload["choices"][0]["message"]["content"])
+
+
+def deepseek_summary(candidate: dict, api_key: str) -> dict:
+    evidence = {k: v for k, v in candidate.items() if k != "abstract"}
+    evidence["evidenceText"] = candidate["evidenceText"]
+    expert_schema = {"fieldPosition": "领域定位", "literatureDialogue": ["文献对话"], "contentFeatures": [{"label": "内容特色", "detail": "分析"}], "theoreticalContribution": "理论贡献", "empiricalContribution": "经验贡献", "researchImplications": ["后续研究启发"]}
+    reviewer_schema = {"method": "质性研究|定量研究|综述|混合研究", "methods": ["研究设计与数据"], "researchFeatures": [{"label": "研究特色", "detail": "分析"}], "criticalReview": ["批判性评价"], "methodologicalContribution": "方法贡献", "limits": ["局限"], "evidenceBoundaries": ["当前材料不能证明什么"]}
+    common = "只能依据给定证据。若分析依据为摘要，禁止虚构样本量、变量、章节、引文、统计结果或全文论证；信息不足必须写‘当前证据未说明’。"
+    expert = deepseek_json(api_key, "你是该研究领域的资深社会学专家。" + common, "输出纯JSON并匹配模板：" + json.dumps(expert_schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False))
+    reviewer = deepseek_json(api_key, "你是严格的社会科学方法审稿人。" + common, "输出纯JSON并匹配模板：" + json.dumps(reviewer_schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False))
+    schema = {"title": "中文标题", "topics": ["主题"], "recommendation": "专家推荐理由", "question": "研究问题", "selectionSource": "选题如何形成", "articleStructure": ["可由当前证据确认的结构；不确定则说明"], "thesis": "核心论点", "theory": [{"name": "概念或理论", "detail": "定义、关系与机制"}], "chain": [{"label": "论证步骤", "detail": "证据如何支持命题"}], "findings": ["区分直接发现、解释与外推"], "highlights": [{"label": "亮点", "detail": "说明"}], "questions": ["研究者思考题"], "terms": [{"term": "术语", "definition": "定义"}]}
+    synthesis_prompt = "你是社会学精读主编。整合证据、领域专家意见和方法审稿意见，输出纯JSON并严格匹配模板。不得新增证据中没有的事实。\n模板：" + json.dumps(schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False) + "\n领域专家：" + json.dumps(expert, ensure_ascii=False) + "\n方法审稿：" + json.dumps(reviewer, ensure_ascii=False)
+    synthesis = deepseek_json(api_key, "建立可追溯的论断—证据链，明确事实、解释、外推和未知。", synthesis_prompt)
+    return {**synthesis, **expert, **reviewer, "evidenceBasis": candidate["evidenceBasis"], "analysisDepth": candidate["analysisDepth"], "fullTextSource": candidate["fullTextSource"], "confidence": candidate["confidence"]}
 
 
 def slugify(title: str) -> str:
@@ -127,9 +172,18 @@ def build_article(candidate: dict, summary: dict, issue: int) -> dict:
     return {"slug": slug, "date": today, "issue": f"第 {issue:02d} 期", "title": summary["title"], "titleEn": candidate["title"], "authors": " · ".join(candidate["authors"]), "journal": candidate["journal"], "year": int((candidate.get("date") or today)[:4]), "volume": candidate.get("volume") or "在线发表", "pages": candidate.get("pages") or "在线发表", "doi": candidate.get("doi") or "暂无 DOI", "sourceUrl": candidate["sourceUrl"], "documentUrl": f"/documents/{today}-{slug}.md", "language": "英文", **summary}
 
 
+def validate_expert_summary(summary: dict) -> None:
+    required = {"title", "method", "fieldPosition", "literatureDialogue", "contentFeatures", "researchFeatures", "criticalReview", "researchImplications", "evidenceBoundaries", "evidenceBasis", "analysisDepth", "fullTextSource", "confidence"}
+    missing = required - summary.keys()
+    if missing:
+        raise ValueError(f"Expert analysis missing fields: {sorted(missing)}")
+    if summary["evidenceBasis"] == "摘要" and summary["analysisDepth"] != "摘要解读":
+        raise ValueError("Abstract-only evidence must be labeled 摘要解读")
+
+
 def markdown(article: dict) -> str:
-    lines = [f"# {article['title']}", "", f"**原题：** {article['titleEn']}", f"**作者：** {article['authors']}", f"**来源：** {article['journal']} ({article['year']})", f"**DOI：** {article['doi']}", f"**官方原文：** {article['sourceUrl']}", "", "> 本精读由公开元数据与摘要辅助生成，不能替代阅读全文。", ""]
-    sections = [("研究问题", article["question"]), ("选题来源", article["selectionSource"]), ("文章结构", article["articleStructure"]), ("理论框架", article["theory"]), ("数据与方法", article["methods"]), ("分析思路", article["chain"]), ("主要结论", article["findings"]), ("亮点", article["highlights"]), ("局限", article["limits"]), ("思考题", article["questions"])]
+    lines = [f"# {article['title']}", "", f"**原题：** {article['titleEn']}", f"**作者：** {article['authors']}", f"**来源：** {article['journal']} ({article['year']})", f"**DOI：** {article['doi']}", f"**官方原文：** {article['sourceUrl']}", f"**分析依据：** {article['evidenceBasis']}", f"**分析深度：** {article['analysisDepth']}", f"**全文来源：** {article['fullTextSource']}", f"**证据置信度：** {article['confidence']}", "", "> 本精读由 AI 作为研究助理生成。所有判断受可获得证据约束，不能替代研究者阅读全文与核查。", ""]
+    sections = [("领域定位", article["fieldPosition"]), ("研究问题", article["question"]), ("选题来源", article["selectionSource"]), ("文献对话", article["literatureDialogue"]), ("文章结构", article["articleStructure"]), ("理论框架", article["theory"]), ("数据与方法", article["methods"]), ("分析思路", article["chain"]), ("主要结论", article["findings"]), ("经验贡献", article["empiricalContribution"]), ("理论贡献", article["theoreticalContribution"]), ("方法贡献", article["methodologicalContribution"]), ("内容特色", article["contentFeatures"]), ("研究特色", article["researchFeatures"]), ("批判性评价", article["criticalReview"]), ("证据边界", article["evidenceBoundaries"]), ("研究启发", article["researchImplications"]), ("思考题", article["questions"])]
     for heading, value in sections:
         lines += [f"## {heading}", ""]
         if isinstance(value, list):
@@ -165,7 +219,9 @@ def main() -> int:
     if args.dry_run:
         return 0
     generated = json.loads(DATA_FILE.read_text(encoding="utf-8"))
+    candidate = add_evidence(candidate)
     summary = deepseek_summary(candidate, api_key)
+    validate_expert_summary(summary)
     article = build_article(candidate, summary, len(generated) + 3)
     generated.insert(0, article)
     DATA_FILE.write_text(json.dumps(generated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -177,4 +233,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 

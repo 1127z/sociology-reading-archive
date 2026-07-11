@@ -50,6 +50,10 @@ jobs:
               missing = required - row.keys()
               assert not missing, f"Missing fields for {row.get('slug')}: {sorted(missing)}"
               assert (Path("public") / row["documentUrl"].removeprefix("/")).is_file()
+          if rows and "evidenceBasis" in rows[0]:
+              expert = {"analysisDepth", "fullTextSource", "confidence", "fieldPosition", "literatureDialogue", "contentFeatures", "researchFeatures", "criticalReview", "researchImplications", "evidenceBoundaries"}
+              assert not (expert - rows[0].keys()), f"Missing expert fields: {sorted(expert - rows[0].keys())}"
+              assert rows[0]["evidenceBasis"] != "摘要" or rows[0]["analysisDepth"] == "摘要解读"
           PY
       - uses: actions/setup-node@v4
         with:
@@ -72,5 +76,6 @@ jobs:
           git add package-lock.json data/articles.generated.json public/documents/
           git commit -m "content: add daily sociology reading"
           git push
+
 
 

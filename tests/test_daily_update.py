@@ -29,8 +29,15 @@ class DailyUpdateTests(unittest.TestCase):
     def test_fallback_slug_is_dated(self):
         self.assertTrue(MODULE.slugify("中文标题").startswith("sociology-reading-"))
 
+    def test_abstract_evidence_cannot_claim_expert_full_reading(self):
+        summary = {key: [] for key in ("literatureDialogue", "contentFeatures", "researchFeatures", "criticalReview", "researchImplications", "evidenceBoundaries")}
+        summary.update({"title": "标题", "method": "综述", "fieldPosition": "定位", "evidenceBasis": "摘要", "analysisDepth": "专家精读", "fullTextSource": "未获得", "confidence": "中"})
+        with self.assertRaises(ValueError):
+            MODULE.validate_expert_summary(summary)
+
 
 if __name__ == "__main__":
     unittest.main()
+
 
 
