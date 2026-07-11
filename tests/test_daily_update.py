@@ -26,6 +26,9 @@ class DailyUpdateTests(unittest.TestCase):
     def test_empty_candidate_set_is_safe(self):
         self.assertIsNone(MODULE.choose_candidate([], set(), set()))
 
+    def test_fallback_slug_is_dated(self):
+        self.assertTrue(MODULE.slugify("中文标题").startswith("sociology-reading-"))
+
 
 if __name__ == "__main__":
     unittest.main()
