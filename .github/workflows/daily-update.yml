@@ -46,6 +46,16 @@ jobs:
               assert not missing, f"Missing fields for {row.get('slug')}: {sorted(missing)}"
               assert (Path("public") / row["documentUrl"].removeprefix("/")).is_file()
           PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Verify website build
+        run: |
+          npm ci
+          npm run typecheck
+          npm test
+          npm run build
       - name: Commit new reading
         run: |
           if [ -z "$(git status --porcelain -- data/articles.generated.json public/documents/)" ]; then
@@ -57,4 +67,5 @@ jobs:
           git add data/articles.generated.json public/documents/
           git commit -m "content: add daily sociology reading"
           git push
+
 

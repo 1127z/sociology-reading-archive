@@ -31,54 +31,34 @@ export function SiteFooter() {
 
 export function ReadingToggle({ slug }: { slug: string }) {
   const [read, setRead] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
   useEffect(() => {
-    const controller = new AbortController();
-    fetch(`/api/progress/${slug}`, { signal: controller.signal })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error("读取失败")))
-      .then((data) => setRead(data.progress.status === "read"))
-      .catch((reason) => { if (reason.name !== "AbortError") setError("状态暂时无法同步"); });
-    return () => controller.abort();
+    setRead(localStorage.getItem(`reading-status:${slug}`) === "read");
   }, [slug]);
-  const toggle = async () => {
-    const next = !read; setBusy(true); setError("");
-    try {
-      const response = await fetch(`/api/progress/${slug}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ status: next ? "read" : "unread" }) });
-      if (!response.ok) throw new Error("保存失败");
-      setRead(next);
-    } catch { setError("保存失败，请稍后重试"); } finally { setBusy(false); }
+  const toggle = () => {
+    const next = !read;
+    localStorage.setItem(`reading-status:${slug}`, next ? "read" : "unread");
+    setRead(next);
   };
-  return <div className="sync-control"><button disabled={busy} className={read ? "read-button done" : "read-button"} onClick={toggle}>{busy ? "正在保存…" : read ? "✓ 已完成阅读" : "标记为已读"}</button>{error && <small className="sync-error">{error}</small>}</div>;
+  return <div className="sync-control"><button className={read ? "read-button done" : "read-button"} onClick={toggle}>{read ? "✓ 已完成阅读" : "标记为已读"}</button></div>;
 }
 
 export function NotePad({ slug }: { slug: string }) {
   const [note, setNote] = useState("");
   const [saved, setSaved] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState("");
   useEffect(() => {
-    const controller = new AbortController();
-    fetch(`/api/progress/${slug}`, { signal: controller.signal })
-      .then((response) => response.ok ? response.json() : Promise.reject(new Error("读取失败")))
-      .then((data) => setNote(data.progress.note || ""))
-      .catch((reason) => { if (reason.name !== "AbortError") setError("笔记暂时无法同步"); });
-    return () => controller.abort();
+    setNote(localStorage.getItem(`reading-note:${slug}`) ?? "");
   }, [slug]);
-  const save = async () => {
-    setBusy(true); setError("");
-    try {
-      const response = await fetch(`/api/progress/${slug}`, { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify({ note }) });
-      if (!response.ok) throw new Error("保存失败");
-      setSaved(true); setTimeout(() => setSaved(false), 1600);
-    } catch { setError("保存失败，请稍后重试"); } finally { setBusy(false); }
+  const save = () => {
+    localStorage.setItem(`reading-note:${slug}`, note);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1600);
   };
   return (
     <section className="note-pad">
       <div><span className="eyebrow">MY NOTES</span><h2>我的阅读笔记</h2></div>
       <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="写下你的疑问、反驳或可以继续研究的想法……" aria-label="阅读笔记" />
-      <button disabled={busy} onClick={save}>{busy ? "正在保存…" : saved ? "已保存并同步" : "保存笔记"}</button>
-      <small>{error || "笔记将保存到你的账号，并在设备间同步。"}</small>
+      <button onClick={save}>{saved ? "已保存" : "保存笔记"}</button>
+      <small>笔记保存在当前浏览器；接入账号系统后可跨设备同步。</small>
     </section>
   );
 }
@@ -109,3 +89,4 @@ export function LibraryExplorer({ articles }: { articles: Article[] }) {
     </>
   );
 }
+

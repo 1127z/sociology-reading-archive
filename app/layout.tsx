@@ -18,9 +18,6 @@ export const metadata: Metadata = {
     template: "%s｜社会学阅读档案",
   },
   description: "记录每日社会学精读，保存论文、研究方法、论证结构与个人阅读笔记。",
-  other: {
-    "codex-preview": "development",
-  },
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
@@ -42,3 +39,4 @@ export default function RootLayout({
     </html>
   );
 }
+

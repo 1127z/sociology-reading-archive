@@ -20,7 +20,11 @@ class DailyUpdateTests(unittest.TestCase):
     def test_rebuilds_openalex_abstract(self):
         self.assertEqual(MODULE.abstract_from_inverted({"world": [1], "hello": [0]}), "hello world")
 
+    def test_slugify_is_url_safe(self):
+        self.assertEqual(MODULE.slugify("Social Life & Inequality!"), "social-life-inequality")
+
 
 if __name__ == "__main__":
     unittest.main()
+
 

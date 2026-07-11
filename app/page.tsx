@@ -2,8 +2,6 @@ import Link from "next/link";
 import { listArticles } from "../db/repository";
 import { ReadingToggle, SiteFooter, SiteHeader } from "./components";
 
-export const dynamic = "force-dynamic";
-
 export default async function Home() {
   const articles = await listArticles();
   const article = articles[0];
@@ -52,3 +50,4 @@ export default async function Home() {
     </main>
   );
 }
+

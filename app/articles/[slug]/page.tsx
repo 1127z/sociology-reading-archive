@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import { NotePad, ReadingToggle, SiteFooter, SiteHeader } from "../../components";
 import { findArticle } from "../../../db/repository";
 
-export const dynamic = "force-dynamic";
+export async function generateStaticParams() {
+  const { listArticles } = await import("../../../db/repository");
+  return (await listArticles()).map((article) => ({ slug: article.slug }));
+}
 
 export default async function ArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params; const article = await findArticle(slug); if (!article) notFound();
@@ -32,4 +35,5 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
       </article><SiteFooter /></main>
   );
 }
+
 
