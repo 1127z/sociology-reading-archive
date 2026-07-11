@@ -1,2 +1,87 @@
-[]
-
+[
+  {
+    "slug": "social-differentiation-in-agriculture-and-the-ideology-of-neopopulism",
+    "date": "2026-07-11",
+    "issue": "第 03 期",
+    "title": "农业中的社会分化与新民粹主义意识形态",
+    "titleEn": "Social Differentiation in Agriculture and the Ideology of Neopopulism",
+    "authors": "Alain de Janvry",
+    "journal": "OpenAlex indexed work",
+    "year": 2026,
+    "volume": "在线发表",
+    "pages": "在线发表",
+    "doi": "10.4324/9781003797661-6",
+    "sourceUrl": "https://doi.org/10.4324/9781003797661-6",
+    "documentUrl": "/documents/2026-07-11-social-differentiation-in-agriculture-and-the-ideology-of-neopopulism.md",
+    "language": "英文",
+    "method": "综述",
+    "topics": [
+      "农业社会分化",
+      "新民粹主义",
+      "农民与家庭农场"
+    ],
+    "recommendation": "本文系统梳理了19世纪末俄国关于农民与家庭农场命运的经典争论，对理解当代农业转型中的意识形态冲突具有重要参考价值。",
+    "question": "在资本主义发展背景下，农民和家庭农场的本质与未来是什么？",
+    "selectionSource": "OpenAlex索引文献",
+    "articleStructure": [
+      "引言：旧争论的韧性",
+      "俄国民族派观点：非资本主义农业的可行性",
+      "列宁与布尔什维克的反对观点：资本主义已渗透农村",
+      "结论：农民分化与去农民化过程"
+    ],
+    "thesis": "关于农民和家庭农场命运的旧争论在当代以新形式重现，核心是农业中的社会分化与去农民化过程。",
+    "theory": [
+      {
+        "name": "新民粹主义意识形态",
+        "detail": "摘要未说明具体理论细节，仅提及该意识形态在农业社会分化争论中的角色。"
+      }
+    ],
+    "methods": [
+      "文献综述与历史分析"
+    ],
+    "chain": [
+      {
+        "label": "问题提出",
+        "detail": "指出旧争论在当代的复现"
+      },
+      {
+        "label": "历史梳理",
+        "detail": "回顾19世纪末俄国民族派与列宁的争论"
+      },
+      {
+        "label": "论点对比",
+        "detail": "呈现民族派关于非资本主义农业可行性的论点与列宁关于资本主义渗透、农民无产阶级化及国内市场的论点"
+      },
+      {
+        "label": "结论",
+        "detail": "强调列宁提出的“去农民化”过程"
+      }
+    ],
+    "findings": [
+      "资本主义已深入农村，导致农民阶级分化与家庭农场消亡"
+    ],
+    "highlights": [
+      {
+        "label": "历史视角",
+        "detail": "将当代农业争论置于19世纪末俄国争论的延续中，揭示其意识形态根源"
+      }
+    ],
+    "limits": [
+      "摘要未说明研究局限"
+    ],
+    "questions": [
+      "当代农业转型中，家庭农场是否仍具有生命力？",
+      "新民粹主义在当今农业政策中如何体现？"
+    ],
+    "terms": [
+      {
+        "term": "去农民化",
+        "definition": "列宁用来描述农民阶级分化为社会阶级以及家庭农场消亡的过程。"
+      },
+      {
+        "term": "新民粹主义",
+        "definition": "摘要未给出明确定义，指代一种强调非资本主义农业组织形式的意识形态。"
+      }
+    ]
+  }
+]
