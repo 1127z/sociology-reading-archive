@@ -12,10 +12,10 @@ export default async function Home() {
       <SiteHeader />
       <section className="hero shell">
         <div className="hero-copy">
-          <span className="eyebrow">DAILY SOCIOLOGY · {article.issue}</span>
+          <span className="eyebrow">DAILY SOCIOLOGY · {article?.issue ?? "等待新文献"}</span>
           <h1>每天读一篇，<br />慢慢形成自己的<span>问题意识</span>。</h1>
           <p>这里不只收藏论文，更拆解一篇研究如何提出问题、组织证据、建立理论并得出结论。</p>
-          <div className="hero-actions"><Link className="primary" href={`/articles/${article.slug}`}>开始今日精读 <span>→</span></Link><Link className="secondary" href="/library">查看全部文献</Link></div>
+          <div className="hero-actions">{article && <Link className="primary" href={`/articles/${article.slug}`}>开始今日精读 <span>→</span></Link>}<Link className="secondary" href="/library">查看全部文献</Link></div>
         </div>
         <aside className="reading-stats" aria-label="阅读统计">
           <div className="seal">SOC<br />READ</div>
@@ -24,7 +24,7 @@ export default async function Home() {
         </aside>
       </section>
 
-      <section className="today shell">
+      {article ? <section className="today shell">
         <div className="section-heading"><div><span className="eyebrow">TODAY&apos;S READING</span><h2>今日精读</h2></div><time>{article.date.replaceAll("-", " / ")}</time></div>
         <article className="feature-article">
           <div className="feature-index"><span>{article.issue}</span><strong>{article.journal === "arXiv preprint" ? "ARXIV" : "ASR"}</strong><small>{article.method}</small></div>
@@ -36,7 +36,12 @@ export default async function Home() {
           </div>
           <div className="feature-note"><span className="eyebrow">WHY READ IT</span><p>{article.recommendation}</p><Link href={`/articles/${article.slug}`}>进入完整精读 <span>↗</span></Link><ReadingToggle slug={article.slug} /></div>
         </article>
-      </section>
+      </section> : <section className="today shell">
+        <div className="section-heading"><div><span className="eyebrow">ARCHIVE REVIEW</span><h2>暂无符合当前标准的文献</h2></div></div>
+        <article className="feature-article">
+          <div className="feature-main"><h2>旧文献已完成标准化复评</h2><p className="english-title">下一篇满足全文、质量与学习价值要求的社会学论文将在自动更新后显示。</p></div>
+        </article>
+      </section>}
 
       <section className="method shell" id="method">
         <div className="method-intro"><span className="eyebrow">READING METHOD</span><h2>不止读懂结论，<br />更要看懂研究是怎样完成的。</h2></div>
