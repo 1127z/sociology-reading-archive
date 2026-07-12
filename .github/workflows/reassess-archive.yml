@@ -1,0 +1,56 @@
+name: Reassess legacy archive
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reassess:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check -r requirements.txt
+      - run: python -m unittest discover -s tests -p "test_*.py"
+      - name: Reassess and rewrite archive
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+        run: python scripts/reassess_archive.py
+      - name: Validate reassessment output
+        run: |
+          python -m json.tool data/archive_reassessment.json > /dev/null
+          python -m json.tool data/articles.generated.json > /dev/null
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          audit = json.loads(Path("data/archive_reassessment.json").read_text())
+          rows = json.loads(Path("data/articles.generated.json").read_text())
+          assert audit["total"] == 6
+          assert audit["retained"] + audit["deleted"] == 6
+          assert audit["retained"] == len(rows)
+          assert "export const articles: Article[] = [];" in Path("app/data.ts").read_text()
+          for row in rows:
+              assert row["evidenceBasis"] == "全文"
+              assert row["selectionScore"] >= 65
+              assert (Path("public") / row["documentUrl"].removeprefix("/")).is_file()
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm install --ignore-scripts --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Commit reassessed archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/data.ts data/articles.generated.json data/archive_reassessment.json data/archive_reassessment.csv public/documents/
+          git commit -m "content: reassess legacy sociology archive"
+          git push
