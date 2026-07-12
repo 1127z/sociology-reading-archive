@@ -1,0 +1,69 @@
+{
+  "standardVersion": 1,
+  "runDate": "2026-07-12",
+  "total": 6,
+  "retained": 0,
+  "deleted": 6,
+  "items": [
+    {
+      "title": "Between Two Rituals: Face and Effervescence as Moments of Social Life",
+      "doi": "10.1177/00031224261441865",
+      "status": "deleted",
+      "reason": "full_text_not_parsed",
+      "score": 73,
+      "difficulty": "L1",
+      "evidenceBasis": "摘要",
+      "fullTextSource": "https://journals.sagepub.com/history/1ee79acd-8b44-461b-96f2-d8daa1abefed/00031224261441865.37496122.pdf"
+    },
+    {
+      "title": "Perspectives on How Sociology Can Advance Theorizing about Human-Chatbot Interaction and Developing Chatbots for Social Good",
+      "doi": "",
+      "status": "deleted",
+      "reason": "score_below_threshold",
+      "score": 55,
+      "difficulty": "L1",
+      "evidenceBasis": "",
+      "fullTextSource": ""
+    },
+    {
+      "title": "Social Differentiation in Agriculture and the Ideology of Neopopulism",
+      "doi": "10.4324/9781003797661-6",
+      "status": "deleted",
+      "reason": "unknown_venue",
+      "score": 52,
+      "difficulty": "L1",
+      "evidenceBasis": "",
+      "fullTextSource": ""
+    },
+    {
+      "title": "Menopause and the paradoxes of self-help",
+      "doi": "10.1177/00380261261451656",
+      "status": "deleted",
+      "reason": "score_below_threshold",
+      "score": 61,
+      "difficulty": "L1",
+      "evidenceBasis": "",
+      "fullTextSource": ""
+    },
+    {
+      "title": "Queer menopause: Expertise, ways of (not) knowing and resisting biomedicalisation",
+      "doi": "10.1177/00380261261451985",
+      "status": "deleted",
+      "reason": "score_below_threshold",
+      "score": 61,
+      "difficulty": "L1",
+      "evidenceBasis": "",
+      "fullTextSource": ""
+    },
+    {
+      "title": "The self-care paradox of menopause and yoga in neoliberal spaces",
+      "doi": "10.1177/00380261261451663",
+      "status": "deleted",
+      "reason": "weak_sociology_relevance",
+      "score": 61,
+      "difficulty": "L1",
+      "evidenceBasis": "",
+      "fullTextSource": ""
+    }
+  ]
+}
