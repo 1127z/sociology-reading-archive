@@ -8,11 +8,15 @@ SPEC.loader.exec_module(MODULE)
 
 
 class DailyUpdateTests(unittest.TestCase):
+    def candidate(self, title="A Sociology Study", doi="10.1/new", journal="American Sociological Review"):
+        abstract = ("This sociology study examines social inequality using interview evidence and theory. " * 12)
+        return {"title": title, "doi": doi, "citations": 1, "journal": journal, "type": "article", "abstract": abstract, "fullTextUrl": "https://example.org/full", "pdfUrl": "", "provider": "OpenAlex"}
+
     def test_normalize_title(self):
         self.assertEqual(MODULE.normalize_title("Social Life: A Study"), "sociallifeastudy")
 
     def test_deduplicates_by_doi_and_title(self):
-        rows = [{"title": "Existing Paper", "doi": "10.1/x", "citations": 9}, {"title": "New Paper", "doi": "10.1/y", "citations": 1}]
+        rows = [self.candidate("Existing Paper", "10.1/x"), self.candidate("New Paper", "10.1/y")]
         selected = MODULE.choose_candidate(rows, {"10.1/x"}, {"other"})
         self.assertEqual(selected["title"], "New Paper")
         self.assertIsNone(MODULE.choose_candidate(rows[:1], set(), {"existingpaper"}))
@@ -36,13 +40,33 @@ class DailyUpdateTests(unittest.TestCase):
             MODULE.validate_expert_summary(summary)
 
     def test_selection_source_is_factual(self):
-        source = MODULE.selection_source({"provider": "OpenAlex"})
+        source = MODULE.selection_source({"provider": "OpenAlex", "learningFocus": "社会学理论", "selectionScore": {"difficulty": "L1", "total": 82}})
         self.assertIn("OpenAlex", source)
         self.assertNotIn("专家推荐", source)
+
+    def test_rejects_non_articles_and_missing_full_text(self):
+        config = MODULE.load_selection_config()
+        editorial = self.candidate("Editorial: Sociology", "10.1/editorial")
+        self.assertEqual(MODULE.hard_filter_reason(editorial, config, set(), set()), "excluded_document_type")
+        no_full_text = self.candidate()
+        no_full_text["fullTextUrl"] = ""
+        self.assertEqual(MODULE.hard_filter_reason(no_full_text, config, set(), set()), "no_authorized_full_text")
+
+    def test_priority_journal_scores_higher(self):
+        priority = MODULE.score_candidate(self.candidate())
+        ordinary = MODULE.score_candidate(self.candidate(journal="Journal of General Studies"))
+        self.assertGreater(priority["total"], ordinary["total"])
+        self.assertIn(priority["difficulty"], {"L1", "L2", "L3"})
+
+    def test_low_scoring_candidate_is_not_selected(self):
+        weak = self.candidate(journal="Journal of General Studies")
+        weak["abstract"] = "Sociology culture evidence. " * 20
+        self.assertIsNone(MODULE.choose_candidate([weak], set(), set()))
 
 
 if __name__ == "__main__":
     unittest.main()
+
 
 
 

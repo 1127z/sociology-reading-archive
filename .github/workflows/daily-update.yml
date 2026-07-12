@@ -5,11 +5,13 @@ on:
     branches: [main]
     paths:
       - "app/**"
+      - "config/**"
       - "db/**"
       - "examples/**"
       - "package.json"
       - "package-lock.json"
       - "scripts/daily_update.py"
+      - "requirements.txt"
       - "tests/**"
   schedule:
     # GitHub cron uses UTC. 23:00 UTC is 07:00 Asia/Taipei the next day.
@@ -32,6 +34,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install Python dependencies
+        run: python -m pip install --disable-pip-version-check -r requirements.txt
       - name: Run unit tests
         run: python -m unittest discover -s tests -p "test_*.py"
       - name: Check retrieval on code changes
@@ -58,6 +62,12 @@ jobs:
               expert = {"analysisDepth", "fullTextSource", "confidence", "fieldPosition", "literatureDialogue", "contentFeatures", "researchFeatures", "criticalReview", "researchImplications", "evidenceBoundaries"}
               assert not (expert - rows[0].keys()), f"Missing expert fields: {sorted(expert - rows[0].keys())}"
               assert rows[0]["evidenceBasis"] != "摘要" or rows[0]["analysisDepth"] == "摘要解读"
+              if "difficultyLevel" in rows[0]:
+                  student = {"selectionScore", "selectionBreakdown", "learningFocus", "prerequisiteKnowledge", "readingGuide", "learningExercises"}
+                  assert not (student - rows[0].keys()), f"Missing student fields: {sorted(student - rows[0].keys())}"
+                  assert rows[0]["evidenceBasis"] == "全文"
+                  assert rows[0]["difficultyLevel"] in {"L1", "L2", "L3", "L4"}
+                  assert 0 <= rows[0]["selectionScore"] <= 100
           PY
       - uses: actions/setup-node@v4
         with:
@@ -80,6 +90,7 @@ jobs:
           git add package-lock.json data/articles.generated.json public/documents/
           git commit -m "content: add daily sociology reading"
           git push
+
 
 
 

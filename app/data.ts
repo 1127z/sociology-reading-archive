@@ -20,6 +20,13 @@ export type Article = {
   analysisDepth?: "专家精读" | "摘要解读";
   fullTextSource?: string;
   confidence?: "高" | "中" | "低";
+  difficultyLevel?: "L1" | "L2" | "L3" | "L4";
+  selectionScore?: number;
+  selectionBreakdown?: Record<string, number>;
+  learningFocus?: string;
+  prerequisiteKnowledge?: string[];
+  readingGuide?: { quickRead: string; closeRead: string; canSkim: string };
+  learningExercises?: string[];
   fieldPosition?: string;
   literatureDialogue?: string[];
   empiricalContribution?: string;
@@ -186,5 +193,6 @@ export const articles: Article[] = [
 ];
 
 export const getArticle = (slug: string) => articles.find((article) => article.slug === slug);
+
 
 

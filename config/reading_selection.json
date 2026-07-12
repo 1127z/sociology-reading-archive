@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "learner_profile": "社会学本科生，以提升文献阅读能力、研究设计判断和专业知识为目标",
+  "retrieval": {
+    "days": 365,
+    "openalex_rows": 100,
+    "crossref_rows": 50,
+    "shortlist_size": 6,
+    "min_selection_score": 65,
+    "min_abstract_chars": 500,
+    "min_full_text_chars": 5000,
+    "require_parsed_full_text": true
+  },
+  "weights": {
+    "teaching_value": 25,
+    "professional_importance": 20,
+    "readability": 15,
+    "research_training": 15,
+    "source_quality": 15,
+    "full_text_availability": 10
+  },
+  "preferred_difficulty": ["L1", "L2"],
+  "weekly_focus": {
+    "Monday": "社会学理论与核心概念",
+    "Tuesday": "质性研究与田野方法",
+    "Wednesday": "定量研究与因果推断",
+    "Thursday": "社会分层、不平等与制度",
+    "Friday": "专题研究与前沿议题",
+    "Saturday": "比较研究与文献综述",
+    "Sunday": "领域导论与知识复盘"
+  },
+  "focus_terms": {
+    "Monday": ["theory", "concept", "mechanism", "social order", "power"],
+    "Tuesday": ["interview", "ethnograph", "fieldwork", "participant observation", "qualitative"],
+    "Wednesday": ["survey", "regression", "experiment", "causal", "quantitative", "longitudinal"],
+    "Thursday": ["stratification", "inequality", "class", "institution", "education", "labor"],
+    "Friday": ["digital", "climate", "health", "gender", "race", "migration", "emerging"],
+    "Saturday": ["comparative", "review", "synthesis", "cross-national"],
+    "Sunday": ["introduction", "overview", "review", "foundations", "classic"]
+  },
+  "priority_journals": [
+    "American Sociological Review",
+    "American Journal of Sociology",
+    "The British Journal of Sociology",
+    "Sociology",
+    "The Sociological Review",
+    "Social Forces",
+    "Social Problems",
+    "European Sociological Review",
+    "Theory and Society",
+    "Gender & Society",
+    "Social Networks",
+    "Work and Occupations",
+    "Demography",
+    "Qualitative Sociology"
+  ],
+  "social_relevance_terms": [
+    "sociolog", "social stratification", "social inequality", "social movement",
+    "social class", "social network", "social institution", "ethnograph",
+    "race and ethnicity", "gender inequality", "organization", "family",
+    "migration", "education", "labor", "culture", "identity"
+  ],
+  "teaching_terms": [
+    "research question", "we examine", "we investigate", "this study",
+    "theory", "concept", "mechanism", "evidence", "findings", "results"
+  ],
+  "method_terms": [
+    "interview", "ethnograph", "participant observation", "case study",
+    "survey", "experiment", "regression", "longitudinal", "comparative",
+    "content analysis", "network analysis", "mixed methods"
+  ],
+  "advanced_terms": [
+    "structural equation", "instrumental variable", "difference-in-differences",
+    "regression discontinuity", "multilevel model", "bayesian", "latent class",
+    "event history", "fixed effects"
+  ],
+  "excluded_title_terms": [
+    "editorial", "introduction to the special issue", "corrigendum", "erratum",
+    "book review", "retraction", "conference report", "table of contents"
+  ]
+}
+
