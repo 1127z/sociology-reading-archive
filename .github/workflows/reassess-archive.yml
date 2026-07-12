@@ -1,6 +1,10 @@
 name: Reassess legacy archive
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/reassess-archive.yml"
   workflow_dispatch:
 
 permissions:
