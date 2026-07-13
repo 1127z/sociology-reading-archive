@@ -1,1 +1,170 @@
-[]
+[
+  {
+    "slug": "methods-of-data-collection-in-qualitative-research-interviews-focus-grou",
+    "date": "2026-07-14",
+    "issue": "第 03 期",
+    "title": "质性研究数据收集方法：访谈、焦点小组、观察与文献分析",
+    "titleEn": "Methods of Data Collection in Qualitative Research: Interviews, Focus Groups, Observations, and Document Analysis",
+    "authors": "Satish Prakash Chand",
+    "journal": "Advances in Educational Research and Evaluation",
+    "year": 2025,
+    "volume": "在线发表",
+    "pages": "在线发表",
+    "doi": "10.25082/aere.2025.01.001",
+    "sourceUrl": "https://doi.org/10.25082/aere.2025.01.001",
+    "documentUrl": "/documents/2026-07-14-methods-of-data-collection-in-qualitative-research-interviews-focus-grou.md",
+    "language": "英文",
+    "topics": [
+      "质性研究方法",
+      "数据收集",
+      "访谈",
+      "焦点小组",
+      "观察",
+      "文献分析"
+    ],
+    "recommendation": "本文系统梳理了四种核心质性数据收集方法，结构清晰、实践导向，适合社会学本科生快速掌握方法基础并理解三角验证的重要性。",
+    "question": "如何系统理解和运用访谈、焦点小组、观察和文献分析四种质性数据收集方法？",
+    "selectionSource": "面向社会学本科生的学习价值评分筛选；来源为OpenAlex，本周训练重点为‘质性研究与田野方法’，难度L1，总分72/100，并已确认可解析的合法开放全文。",
+    "articleStructure": [
+      "摘要",
+      "引言",
+      "访谈方法",
+      "焦点小组方法",
+      "观察方法",
+      "文献分析方法",
+      "伦理考量",
+      "三角验证",
+      "结论"
+    ],
+    "thesis": "通过整合访谈、焦点小组、观察和文献分析四种互补方法，质性研究者能够构建对社会现象的细致多维理解。",
+    "theory": [
+      {
+        "name": "三角验证",
+        "detail": "使用多种数据来源或方法交叉验证发现，以增强研究可信度和深度。"
+      },
+      {
+        "name": "群体动力学",
+        "detail": "焦点小组中参与者互动产生集体意义和社会规范，不同于个体访谈。"
+      }
+    ],
+    "chain": [
+      {
+        "label": "方法描述",
+        "detail": "论文分别阐述四种方法的目的、过程、优势与挑战，引用经典文献支持。"
+      },
+      {
+        "label": "互补性论证",
+        "detail": "通过比较每种方法的独特贡献（如访谈深入个体经验，观察捕捉实际行为），论证整合的必要性。"
+      },
+      {
+        "label": "三角验证强化",
+        "detail": "提出三角验证可提升研究可信度，整合方法能弥补单一方法的局限。"
+      }
+    ],
+    "findings": [
+      "直接发现：访谈适合探索个体感知，焦点小组揭示集体意义，观察记录实际行为，文献分析提供自然发生数据。",
+      "解释：四种方法各有优劣，整合使用可构建更全面的理解。",
+      "外推：该框架适用于教育研究及更广泛的社会科学领域。"
+    ],
+    "highlights": [
+      {
+        "label": "实践指南",
+        "detail": "为新手研究者提供清晰的方法选择与实施指导。"
+      },
+      {
+        "label": "伦理与三角验证",
+        "detail": "专门讨论伦理考量和三角验证，增强研究严谨性。"
+      }
+    ],
+    "prerequisiteKnowledge": [
+      "质性研究基本概念",
+      "研究设计基础"
+    ],
+    "readingGuide": {
+      "quickRead": "摘要、引言、结论及每种方法的优势与挑战部分。",
+      "closeRead": "三角验证与伦理考量部分，以及方法互补性的论述。",
+      "canSkim": "每种方法的详细过程描述（如访谈步骤）可略读。"
+    },
+    "learningExercises": [
+      "复述：用自己的话概括四种方法的核心特点。",
+      "论证图：绘制四种方法如何互补的思维导图。",
+      "证据判断：评估文中引用文献是否支持其主张。",
+      "迁移练习：设计一个研究问题并选择合适的方法组合。"
+    ],
+    "questions": [
+      "在具体研究中，如何平衡方法整合带来的深度与资源限制？",
+      "三角验证在实际操作中可能遇到哪些挑战？"
+    ],
+    "terms": [
+      {
+        "term": "三角验证",
+        "definition": "使用多种数据来源、方法或理论视角交叉验证研究发现，以增强可信度。"
+      },
+      {
+        "term": "焦点小组",
+        "definition": "由一名主持人引导小组讨论，利用群体互动收集集体观点和社会规范。"
+      }
+    ],
+    "fieldPosition": "该论文定位于质性研究方法论领域，系统梳理访谈、焦点小组、观察和文献分析四种核心数据收集方法，旨在为教育研究及社会科学初学者提供实用指南。",
+    "literatureDialogue": [
+      "与Tracy (2024)、Creswell & Poth (2018)等质性研究方法经典著作对话，整合并更新了方法学知识。",
+      "与Bowen (2009)关于文献分析方法的论述对话，强调其作为自然发生数据的价值。",
+      "与Krueger & Casey (2014)、Morgan (1997)等焦点小组方法文献对话，突出群体动态在意义建构中的作用。"
+    ],
+    "contentFeatures": [
+      {
+        "label": "系统性综述",
+        "detail": "论文对四种方法的目的、过程、优势与挑战进行了全面且结构化的比较分析。"
+      },
+      {
+        "label": "实践导向",
+        "detail": "特别关注伦理考量与三角验证，旨在增强研究可信度，并为新手研究者提供可操作指导。"
+      },
+      {
+        "label": "整合视角",
+        "detail": "强调方法的互补性，主张通过整合多种方法构建对社会现象的细致多维理解。"
+      }
+    ],
+    "theoreticalContribution": "当前证据未说明明确的理论贡献，但论文通过系统整合四种方法，强化了质性研究方法的整体性认识框架。",
+    "empiricalContribution": "当前证据未说明具体的实证贡献，论文为方法选择与实施提供了综合指南，但未报告原始实证数据。",
+    "researchImplications": [
+      "后续研究可基于本文框架，探索不同方法组合在具体教育情境中的应用效果。",
+      "可进一步研究新手研究者如何有效掌握并运用这些方法，以及三角验证策略的实际操作。"
+    ],
+    "method": "综述",
+    "methods": [
+      "文献综述"
+    ],
+    "researchFeatures": [
+      {
+        "label": "研究特色",
+        "detail": "系统梳理四种质性数据收集方法（访谈、焦点小组、观察、文献分析）的目的、过程、优势与挑战，并强调三角验证和伦理考量。"
+      }
+    ],
+    "criticalReview": [
+      "文章为综述性质，未提供原始实证数据或系统性检索策略，缺乏对方法比较的量化或批判性评估。"
+    ],
+    "methodologicalContribution": "为质性研究新手或从定量转向质性的学者提供实用指南，整合四种方法并强调三角验证以增强可信度。",
+    "limits": [
+      "未说明文献检索方法或纳入标准，可能遗漏重要研究；未讨论方法选择的具体情境因素。"
+    ],
+    "evidenceBoundaries": [
+      "当前材料不能证明该综述采用了系统性文献综述方法，不能证明其结论基于原始实证研究，不能证明其比较了不同方法的效度或信度。"
+    ],
+    "evidenceBasis": "全文",
+    "analysisDepth": "专家精读",
+    "fullTextSource": "https://doi.org/10.25082/aere.2025.01.001",
+    "confidence": "高",
+    "difficultyLevel": "L1",
+    "selectionScore": 72,
+    "selectionBreakdown": {
+      "teaching_value": 15,
+      "professional_importance": 15,
+      "readability": 15,
+      "research_training": 7,
+      "source_quality": 10,
+      "full_text_availability": 10
+    },
+    "learningFocus": "质性研究与田野方法"
+  }
+]
