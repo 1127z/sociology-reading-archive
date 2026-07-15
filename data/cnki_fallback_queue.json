@@ -1,25 +1,12 @@
 [
   {
     "candidate": {
-      "id": "cnki-internet-class-identification-2023",
-      "title": "数字时代的个体认知：互联网使用与阶层认同偏差",
-      "authors": ["方长春", "马逸轩"],
-      "journal": "浙江工商大学学报",
-      "date": "2023-11-01",
-      "volume": "2023年第6期",
-      "pages": "在线题录未标明",
-      "doi": "10.14134/j.cnki.cn33-1337/c.2023.06.011",
-      "sourceUrl": "https://link.cnki.net/doi/10.14134/j.cnki.cn33-1337/c.2023.06.011",
-      "language": "中文",
-      "selectionScore": {"total": 84, "difficulty": "L2", "breakdown": {"teaching_value": 23, "professional_importance": 18, "readability": 13, "research_training": 14, "source_quality": 9, "full_text_availability": 7}},
-      "evidenceText": "全文核验记录：论文关注互联网使用是否改变个人对自身社会结构位置的判断，并把主观阶层认同与客观阶层地位的不一致界定为阶层认同偏差。理论部分从个体化、信息碎片化、虚拟化及数字鸿沟讨论互联网可能促使阶层认同向下偏移，并提出年龄、收入、教育、职业和社会流动感知的异质性假设。数据为2015、2017和2018年中国综合社会调查合并数据。研究使用收入、受教育程度和职业声望三个维度，通过潜在类别分析划分客观阶层地位，再与主观阶层认同对照形成一致型、上偏型和下偏型等结果变量。主要模型包括最小二乘线性回归和多类别逻辑斯蒂回归，并把年龄、教育、收入、职业声望、社会流动感知分别与互联网使用加入交互项。论文报告：相较不常使用互联网者，经常使用者的阶层认同更容易向下偏移；这一关系在年龄、收入、教育、职业和流动感知上存在异质性。文章的研究特色是把互联网从一般性的认知影响因素引入阶层认同偏差机制，并将客观地位分类与主观认同结合。证据边界：合并调查数据与观察性模型能够识别稳健关联及群体差异，但不能单凭这些结果确认互联网使用的严格因果效应；互联网使用频率也不能完整代表具体平台、内容暴露和使用目的。"
-    }
-  },
-  {
-    "candidate": {
       "id": "cnki-health-capital-status-2023",
       "title": "健康资本与居民社会经济地位感知——基于CGSS 2017数据的实证分析",
-      "authors": ["徐旻霞", "郑路"],
+      "authors": [
+        "徐旻霞",
+        "郑路"
+      ],
       "journal": "华中科技大学学报（社会科学版）",
       "date": "2023-11-01",
       "volume": "2023年第6期",
@@ -27,7 +14,18 @@
       "doi": "10.19648/j.cnki.jhustss1980.2023.06.10",
       "sourceUrl": "https://link.cnki.net/doi/10.19648/j.cnki.jhustss1980.2023.06.10",
       "language": "中文",
-      "selectionScore": {"total": 84, "difficulty": "L2", "breakdown": {"teaching_value": 22, "professional_importance": 19, "readability": 12, "research_training": 15, "source_quality": 9, "full_text_availability": 7}},
+      "selectionScore": {
+        "total": 84,
+        "difficulty": "L2",
+        "breakdown": {
+          "teaching_value": 22,
+          "professional_importance": 19,
+          "readability": 12,
+          "research_training": 15,
+          "source_quality": 9,
+          "full_text_availability": 7
+        }
+      },
       "evidenceText": "全文核验记录：论文把健康资本放入社会分层与主观社会经济地位感知的关系中，研究低健康资本是否关联较低的主观阶层认同、认同向下偏移、向下流动感知及未来向下流动预期。数据来自CGSS 2017。核心解释变量由受访者自评身体健康状况操作化；结果变量包括主观阶层认同、客观与主观位置比较形成的认同偏移、十年前与目前位置比较形成的流动感知，以及未来位置预期。文章提出两条机制：健康通过劳动供给、收入与消费影响家庭经济生活水平，通过生活满意度影响个体评价。模型控制人口特征、家庭资源、社会保障、地区与省份经济发展等因素，并使用中介效应分析、工具变量估计、两阶段模型和倾向得分匹配进行稳健性处理。论文报告：健康资本越低，主观阶层认同越低，认同向下偏移、向下流动感知和未来向下流动预期的概率越高；家庭经济生活水平与生活满意度构成部分作用路径；影响在女性和45岁及以上群体更突出。研究亮点是把健康不平等从客观资源后果推进到主观阶层感知。证据边界：核心健康指标主要依赖自评，横截面调查及工具变量有效性依赖模型假设；中介结果不应被表述为已完全确认的因果机制。"
     }
   },
@@ -35,7 +33,12 @@
     "candidate": {
       "id": "cnki-family-endowment-fertility-2025",
       "title": "社会分层视角下家庭禀赋变化轨迹与生育决策",
-      "authors": ["杨雪燕", "陈启航", "罗好燃", "袁满迪"],
+      "authors": [
+        "杨雪燕",
+        "陈启航",
+        "罗好燃",
+        "袁满迪"
+      ],
       "journal": "人口学刊",
       "date": "2025-07-01",
       "volume": "2025年第4期",
@@ -43,7 +46,18 @@
       "doi": "10.16405/j.cnki.1004-129X.2025.04.005",
       "sourceUrl": "https://link.cnki.net/doi/10.16405/j.cnki.1004-129X.2025.04.005",
       "language": "中文",
-      "selectionScore": {"total": 81, "difficulty": "L3", "breakdown": {"teaching_value": 21, "professional_importance": 18, "readability": 10, "research_training": 15, "source_quality": 10, "full_text_availability": 7}},
+      "selectionScore": {
+        "total": 81,
+        "difficulty": "L3",
+        "breakdown": {
+          "teaching_value": 21,
+          "professional_importance": 18,
+          "readability": 10,
+          "research_training": 15,
+          "source_quality": 10,
+          "full_text_availability": 7
+        }
+      },
       "evidenceText": "全文核验记录：论文针对既有生育研究把家庭资源拆成单一、静态因素的问题，提出家庭禀赋概念，将多种家庭资本及其随时间变化的轨迹用于解释生育数量差异。理论上连接社会分层与孩子成本—效用框架，强调家庭禀赋具有综合性、可转换性和动态性。数据来自2010—2020年中国家庭追踪调查CFPS多期数据，另纳入2022年数据进行分层轨迹验证。因变量为依据家庭成员库整理的子女数量。研究先对家庭禀赋各维度标准化，再使用组基轨迹模型识别育龄群体的纵向异质类型，依据AIC、BIC、类别概率与平均后验概率比较模型；随后把子女数量作为结果变量并建立回归模型，控制政策因素进行稳健性分析。识别出低起点波动型、中起点增长型、中起点下降型和高起点波动型四类。论文报告中起点增长型子女数量最多，低起点波动型最少；相较低起点波动型，其余三类均与更多子女数量显著相关，排序为中起点增长型、高起点波动型、中起点下降型、低起点波动型。研究特色是用动态轨迹替代单期资源测量，展示基于家庭禀赋的生育分化。证据边界：轨迹类型是模型识别出的统计分组，不是天然阶层；子女数量是既有生育结果，不能等同于主观生育意愿；观察性面板分析仍需谨慎处理反向因果和遗漏变量。"
     }
   },
@@ -51,7 +65,11 @@
     "candidate": {
       "id": "cnki-higher-education-mobility-2025",
       "title": "高等教育扩张与共同富裕：基于代际流动视角",
-      "authors": ["张楠", "迟景明", "范洪敏"],
+      "authors": [
+        "张楠",
+        "迟景明",
+        "范洪敏"
+      ],
       "journal": "辽宁大学学报（哲学社会科学版）",
       "date": "2025-01-01",
       "volume": "2025年第1期",
@@ -59,7 +77,18 @@
       "doi": "10.16197/j.cnki.lnupse.2025.01.009",
       "sourceUrl": "https://link.cnki.net/doi/10.16197/j.cnki.lnupse.2025.01.009",
       "language": "中文",
-      "selectionScore": {"total": 76, "difficulty": "L3", "breakdown": {"teaching_value": 18, "professional_importance": 18, "readability": 9, "research_training": 15, "source_quality": 9, "full_text_availability": 7}},
+      "selectionScore": {
+        "total": 76,
+        "difficulty": "L3",
+        "breakdown": {
+          "teaching_value": 18,
+          "professional_importance": 18,
+          "readability": 9,
+          "research_training": 15,
+          "source_quality": 9,
+          "full_text_availability": 7
+        }
+      },
       "evidenceText": "全文核验记录：论文从教育选择—社会选择—社会分层链条讨论1999年高等教育扩张如何影响代际向上流动，并关注普通本科文凭、精英高校和研究生教育的分化，以及家庭资本对优质教育机会的作用。数据为CFPS 2010—2018五轮调查。代际向上流动通过子代在出生队列中的收入百分位排序是否高于父代来测量。扩张强度使用1998年各省地方高校在校生数与普通高中在校生数的比值，并以1980年以后出生队列识别更可能受到扩招影响的群体。模型纳入出生年份和省份固定效应，使用赫克曼样本选择模型处理收入样本选择问题，并用1998年地方高校数量及其交互项作为工具变量，报告弱工具和过度识别检验；基准表报告样本量28202。论文报告扩张提高代际向上流动概率，低收入家庭从接受高等教育中获得的向上流动机会增幅更明显；普通高等教育文凭信号价值减弱，精英高等教育和研究生教育的重要性上升；家庭资本仍影响优质教育机会，并可能挤出低收入家庭子代。研究特色是同时呈现高等教育扩张的开放效应与内部层级化。证据边界：政策强度、出生队列和工具变量的因果解释依赖平行趋势以外的一组识别假设；收入排序与样本选择处理降低但不能消除全部测量偏差；共同富裕是政策解释框架，不是文中直接测量的结果变量。"
     }
   },
@@ -67,7 +96,9 @@
     "candidate": {
       "id": "cnki-internet-social-capital-2023",
       "title": "互联网使用增加了个人社会资本吗？一个“工具—表达”价值的二元视角",
-      "authors": ["姜俊丰"],
+      "authors": [
+        "姜俊丰"
+      ],
       "journal": "社会发展研究",
       "date": "2023-12-01",
       "volume": "2023年第4期",
@@ -75,7 +106,18 @@
       "doi": "",
       "sourceUrl": "https://kns.cnki.net/kcms2/article/abstract?v=4Snn6dWjeT8T3KI6KnwgR-LAY4aH9mEue-uC9RmFAToc-knACq6vcz1dbIvPvP7bTvf0RRUbtcZ9h92nYPBMTHC4kPsxZUrAOQDatUM_ulYouXiObl6Th4hGHO0E3M0Jjp0S8SijNWQAxrz9F3cqNPd-RHJ9hIxTrg4ib8v8iZ2JsT-ir1DGPdH5uwT-xIHC&uniplatform=NZKPT&language=CHS",
       "language": "中文",
-      "selectionScore": {"total": 73, "difficulty": "L3", "breakdown": {"teaching_value": 18, "professional_importance": 16, "readability": 9, "research_training": 15, "source_quality": 8, "full_text_availability": 7}},
+      "selectionScore": {
+        "total": 73,
+        "difficulty": "L3",
+        "breakdown": {
+          "teaching_value": 18,
+          "professional_importance": 16,
+          "readability": 9,
+          "research_training": 15,
+          "source_quality": 8,
+          "full_text_availability": 7
+        }
+      },
       "evidenceText": "全文核验记录：论文回应互联网究竟增加还是削弱社会资本的争论，提出不能只比较是否上网，还应把互联网功能与社会资本维度对应起来。理论依据包括布迪厄和林南的社会资本论、数字鸿沟的接入沟—使用沟—收益沟框架，以及工具性行动与表达性行动区分。数据为CGSS 2017互联网与社会网络模块；完整分析样本3432人，互联网功能分析中的上网者样本1889人。互联网使用分为是否使用、使用频率和功能；社交、自我展示、休闲娱乐构成表达性功能，网络行动、获取信息、商务交易构成工具性功能。社会资本结构面向用职业位置生成法的网顶、网差、网模测量，关系强度用亲友邻里互动等题项形成指标。基准方法为线性回归；研究进一步采用逆概率加权、两阶段最小二乘工具变量和Heckman样本选择模型处理选择偏误、联立偏误与仅上网者回答功能题的问题。论文报告互联网使用总体关联更多社会资本；工具性功能主要扩展关系结构，表达性功能主要增强关系强度；中老年和低教育群体在接入和收益上处于不利位置。研究亮点是把功能价值与资本维度进行理论匹配。证据边界：工具变量外生性与Heckman排除限制需要额外假设；横截面数据难以完整观察社会网络长期变化；功能分类由问卷项目归并，不能覆盖全部网络实践。"
     }
   },
@@ -83,7 +125,9 @@
     "candidate": {
       "id": "cnki-meme-culture-sociology-2026",
       "title": "“梗”：当代网络文化的社会学考察",
-      "authors": ["张炯"],
+      "authors": [
+        "张炯"
+      ],
       "journal": "湖北社会科学",
       "date": "2026-06-15",
       "volume": "2026年第6期",
@@ -91,7 +135,18 @@
       "doi": "10.13660/j.cnki.42-1112/c.016760",
       "sourceUrl": "https://link.cnki.net/doi/10.13660/j.cnki.42-1112/c.016760",
       "language": "中文",
-      "selectionScore": {"total": 68, "difficulty": "L2", "breakdown": {"teaching_value": 18, "professional_importance": 15, "readability": 14, "research_training": 7, "source_quality": 7, "full_text_availability": 7}},
+      "selectionScore": {
+        "total": 68,
+        "difficulty": "L2",
+        "breakdown": {
+          "teaching_value": 18,
+          "professional_importance": 15,
+          "readability": 14,
+          "research_training": 7,
+          "source_quality": 7,
+          "full_text_availability": 7
+        }
+      },
       "evidenceText": "全文核验记录：这是一篇理论性综述与现象分析文章，不是问卷、访谈或实验研究。论文把网络“梗”界定为文字、图片、视频等多模态的高度符号化、碎片化和开放性文化形式，并从社会环境、技术条件与文化生产机制、社会分层三个维度展开。文章结合模因、网络社会、媒介、参与式文化、亚文化、后现代文化、文化资本与创新扩散等理论资源，讨论“梗”如何反映经济生活、政治环境和文化思潮，又如何通过凝聚情绪、引导认知、圈层认同和戏仿反抗影响社会实践。技术层面强调平台、算法、大数据与低门槛创作改变生产和扩散；文化生产层面比较不同机制如何塑造功能与传播逻辑；分层层面指出文化资本和社会资源差异影响不同群体创造、理解和使用“梗”的能力。论文结论认为，“梗”在技术赋能与社会需求的共同推动下持续演变，是观察社会结构与文化实践关系的窗口，同时伴随平台权力、文化霸权、圈层边界和意义争夺。学习价值在于训练本科生把日常文化现象转译为社会学问题。证据边界：文章没有报告系统抽样、编码程序或原创经验数据，所举案例用于理论说明，不能支持关于群体比例、普遍因果效应或跨平台差异的统计结论；对未来趋势的判断属于理论推论。"
     }
   }
