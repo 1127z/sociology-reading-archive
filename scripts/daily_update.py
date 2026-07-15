@@ -22,6 +22,7 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_FILE = ROOT / "data" / "articles.generated.json"
+FALLBACK_QUEUE_FILE = ROOT / "data" / "cnki_fallback_queue.json"
 SEED_FILE = ROOT / "app" / "data.ts"
 DOCUMENT_DIR = ROOT / "public" / "documents"
 SELECTION_CONFIG_FILE = ROOT / "config" / "reading_selection.json"
@@ -139,6 +140,16 @@ def crossref_candidates(days: int | None = None) -> list[dict]:
         pdf_url = next((entry.get("URL", "") for entry in item.get("link", []) if entry.get("content-type") == "application/pdf"), "") if has_open_license else ""
         result.append({"provider": "Crossref", "title": (item.get("title") or [""])[0], "doi": item.get("DOI", ""), "date": date, "authors": [" ".join(filter(None, [a.get("given"), a.get("family")])) for a in item.get("author", [])], "journal": (item.get("container-title") or ["Crossref indexed work"])[0], "publisher": item.get("publisher", ""), "volume": item.get("volume", ""), "pages": item.get("page", ""), "sourceUrl": item.get("URL", ""), "abstract": html.unescape(abstract), "citations": item.get("is-referenced-by-count", 0), "type": "article", "fullTextUrl": "", "pdfUrl": pdf_url, "isOpenAccess": bool(pdf_url)})
     return result
+
+
+def public_candidates() -> list[dict]:
+    candidates = []
+    for name, loader in (("OpenAlex", openalex_candidates), ("Crossref", crossref_candidates)):
+        try:
+            candidates.extend(loader())
+        except Exception as error:
+            print(f"::warning::{name} retrieval unavailable: {type(error).__name__}")
+    return candidates
 
 
 def contains_any(text: str, terms: list[str]) -> int:
@@ -283,6 +294,42 @@ def select_reading_candidate(candidates: list[dict], dois: set[str], titles: set
     return None
 
 
+def load_fallback_queue() -> list[dict]:
+    if not FALLBACK_QUEUE_FILE.exists():
+        return []
+    queue = json.loads(FALLBACK_QUEUE_FILE.read_text(encoding="utf-8"))
+    if not isinstance(queue, list):
+        raise ValueError("CNKI fallback queue must be a JSON array")
+    return queue
+
+
+def select_fallback_candidate(queue: list[dict], dois: set[str], titles: set[str]) -> dict | None:
+    for entry in queue:
+        candidate = entry.get("candidate", {})
+        doi = str(candidate.get("doi", "")).lower()
+        if (doi and doi in dois) or normalize_title(candidate.get("title", "")) in titles:
+            continue
+        required = {"id", "title", "authors", "journal", "date", "sourceUrl", "evidenceText", "selectionScore"}
+        missing = required - candidate.keys()
+        if missing:
+            raise ValueError(f"Fallback candidate missing fields: {sorted(missing)}")
+        selected = dict(candidate)
+        selected.update({
+            "provider": "知网人工全文库",
+            "evidenceBasis": "全文",
+            "analysisDepth": "专家精读",
+            "fullTextSource": "用户授权获取的知网全文（仅本地核验，不公开存储）",
+            "confidence": "高",
+            "learningFocus": load_selection_config()["weekly_focus"][today_taipei().strftime("%A")],
+        })
+        return selected
+    return None
+
+
+def remove_fallback_candidate(queue: list[dict], candidate_id: str) -> list[dict]:
+    return [entry for entry in queue if entry.get("candidate", {}).get("id") != candidate_id]
+
+
 def deepseek_json(api_key: str, system: str, prompt: str) -> dict:
     body = {"model": "deepseek-chat", "temperature": 0.15, "response_format": {"type": "json_object"}, "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}]}
     payload = request_json(DEEPSEEK_URL, headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}, body=body)
@@ -306,7 +353,8 @@ def deepseek_summary(candidate: dict, api_key: str) -> dict:
 
 def selection_source(candidate: dict) -> str:
     score = candidate.get("selectionScore", {})
-    return f"面向社会学本科生的学习价值评分筛选；来源为{candidate.get('provider', '公开数据库')}，本周训练重点为‘{candidate.get('learningFocus', '综合阅读')}’，难度{score.get('difficulty', '待评估')}，总分{score.get('total', '待评估')}/100，并已确认可解析的合法开放全文。"
+    full_text_note = "并已确认可解析的合法开放全文" if candidate.get("provider") != "知网人工全文库" else "并已由用户提供的知网全文完成本地核验；原始全文未上传至网站或代码仓库"
+    return f"面向社会学本科生的学习价值评分筛选；来源为{candidate.get('provider', '公开数据库')}，本周训练重点为‘{candidate.get('learningFocus', '综合阅读')}’，难度{score.get('difficulty', '待评估')}，总分{score.get('total', '待评估')}/100，{full_text_note}。"
 
 
 def slugify(title: str) -> str:
@@ -317,7 +365,7 @@ def slugify(title: str) -> str:
 def build_article(candidate: dict, summary: dict, issue: int) -> dict:
     slug = slugify(candidate["title"])
     today = today_taipei().isoformat()
-    return {"slug": slug, "date": today, "issue": f"第 {issue:02d} 期", "title": summary["title"], "titleEn": candidate["title"], "authors": " · ".join(candidate["authors"]), "journal": candidate["journal"], "year": int((candidate.get("date") or today)[:4]), "volume": candidate.get("volume") or "在线发表", "pages": candidate.get("pages") or "在线发表", "doi": candidate.get("doi") or "暂无 DOI", "sourceUrl": candidate["sourceUrl"], "documentUrl": f"/documents/{today}-{slug}.md", "language": "英文", **summary}
+    return {"slug": slug, "date": today, "issue": f"第 {issue:02d} 期", "title": summary["title"], "titleEn": candidate["title"], "authors": " · ".join(candidate["authors"]), "journal": candidate["journal"], "year": int((candidate.get("date") or today)[:4]), "volume": candidate.get("volume") or "在线发表", "pages": candidate.get("pages") or "在线发表", "doi": candidate.get("doi") or "暂无 DOI", "sourceUrl": candidate["sourceUrl"], "documentUrl": f"/documents/{today}-{slug}.md", "language": candidate.get("language", "英文"), **summary}
 
 
 def validate_expert_summary(summary: dict) -> None:
@@ -359,11 +407,16 @@ def main() -> int:
         print("DEEPSEEK_API_KEY is required", file=sys.stderr)
         return 2
     dois, titles = existing_keys()
-    candidates = json.loads(args.candidate_file.read_text(encoding="utf-8")) if args.candidate_file else openalex_candidates() + crossref_candidates()
+    candidates = json.loads(args.candidate_file.read_text(encoding="utf-8")) if args.candidate_file else public_candidates()
     candidate = select_reading_candidate(candidates, dois, titles)
+    queue = load_fallback_queue()
+    used_fallback = False
     if not candidate:
-        print("No eligible new article found")
-        return 0
+        candidate = select_fallback_candidate(queue, dois, titles)
+        used_fallback = candidate is not None
+    if not candidate:
+        print("::error::No eligible public article and CNKI fallback queue is empty")
+        return 0 if args.dry_run else 4
     print(f"Selected: {candidate['title']} ({candidate['provider']}, score={candidate['selectionScore']['total']}, difficulty={candidate['selectionScore']['difficulty']}, breakdown={candidate['selectionScore']['breakdown']})")
     if args.dry_run:
         return 0
@@ -375,6 +428,11 @@ def main() -> int:
     DATA_FILE.write_text(json.dumps(generated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     DOCUMENT_DIR.mkdir(parents=True, exist_ok=True)
     (ROOT / "public" / article["documentUrl"].lstrip("/")).write_text(markdown(article), encoding="utf-8")
+    if used_fallback:
+        queue = remove_fallback_candidate(queue, candidate["id"])
+        FALLBACK_QUEUE_FILE.write_text(json.dumps(queue, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        if len(queue) <= 2:
+            print(f"::warning::CNKI fallback inventory is low: {len(queue)} article(s) remaining")
     print(f"Added: {article['slug']}")
     return 0
 

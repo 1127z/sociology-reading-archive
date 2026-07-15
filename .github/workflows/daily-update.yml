@@ -49,6 +49,7 @@ jobs:
       - name: Validate generated content
         run: |
           python -m json.tool data/articles.generated.json > /dev/null
+          python -m json.tool data/cnki_fallback_queue.json > /dev/null
           python - <<'PY'
           import json
           from pathlib import Path
@@ -81,13 +82,13 @@ jobs:
           npm run build
       - name: Commit new reading
         run: |
-          if [ -z "$(git status --porcelain -- data/articles.generated.json public/documents/)" ]; then
-            echo "No new article to commit"
-            exit 0
+          if [ -z "$(git status --porcelain -- data/articles.generated.json data/cnki_fallback_queue.json public/documents/)" ]; then
+            echo "::error::Daily task completed without publishing an article"
+            exit 1
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json data/articles.generated.json public/documents/
+          git add package-lock.json data/articles.generated.json data/cnki_fallback_queue.json public/documents/
           git commit -m "content: add daily sociology reading"
           git push
 

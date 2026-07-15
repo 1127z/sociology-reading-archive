@@ -63,6 +63,36 @@ class DailyUpdateTests(unittest.TestCase):
         weak["abstract"] = "Sociology culture evidence. " * 20
         self.assertIsNone(MODULE.choose_candidate([weak], set(), set()))
 
+    def fallback_entry(self, title="中文社会学研究", doi="10.1/cnki"):
+        return {"candidate": {"id": "cnki-1", "title": title, "doi": doi, "authors": ["作者"], "journal": "社会学研究", "date": "2025-01-01", "sourceUrl": "https://kns.cnki.net/example", "evidenceText": "经全文核验的证据卡", "selectionScore": {"total": 82, "difficulty": "L2", "breakdown": {}}}}
+
+    def test_cnki_fallback_skips_existing_articles(self):
+        queue = [self.fallback_entry("已经发布", "10.1/old"), self.fallback_entry("待发布", "10.1/new")]
+        queue[1]["candidate"]["id"] = "cnki-2"
+        selected = MODULE.select_fallback_candidate(queue, {"10.1/old"}, {"已经发布"})
+        self.assertEqual("cnki-2", selected["id"])
+        self.assertEqual("全文", selected["evidenceBasis"])
+
+    def test_cnki_fallback_is_removed_after_publish(self):
+        queue = [self.fallback_entry(), self.fallback_entry("第二篇", "10.1/two")]
+        queue[1]["candidate"]["id"] = "cnki-2"
+        remaining = MODULE.remove_fallback_candidate(queue, "cnki-1")
+        self.assertEqual(["cnki-2"], [row["candidate"]["id"] for row in remaining])
+
+    def test_cnki_fallback_requires_audited_fields(self):
+        with self.assertRaises(ValueError):
+            MODULE.select_fallback_candidate([{"candidate": {"id": "broken"}}], set(), set())
+
+    def test_committed_cnki_queue_contract(self):
+        queue = MODULE.load_fallback_queue()
+        self.assertEqual(6, len(queue))
+        self.assertEqual(6, len({row["candidate"]["id"] for row in queue}))
+        for row in queue:
+            selected = MODULE.select_fallback_candidate([row], set(), set())
+            self.assertGreaterEqual(selected["selectionScore"]["total"], 65)
+            self.assertGreater(len(selected["evidenceText"]), 300)
+            self.assertTrue(selected["sourceUrl"].startswith("https://"))
+
 
 if __name__ == "__main__":
     unittest.main()
