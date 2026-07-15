@@ -15,6 +15,7 @@ import re
 import sys
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 from pathlib import Path
 
@@ -28,6 +29,9 @@ DOCUMENT_DIR = ROOT / "public" / "documents"
 SELECTION_CONFIG_FILE = ROOT / "config" / "reading_selection.json"
 DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 MAX_EVIDENCE_CHARS = 60000
+API_TIMEOUT_SECONDS = 45
+HTML_TIMEOUT_SECONDS = 15
+PDF_TIMEOUT_SECONDS = 20
 TAIPEI_TZ = dt.timezone(dt.timedelta(hours=8))
 
 
@@ -42,13 +46,13 @@ def today_taipei() -> dt.date:
 def request_json(url: str, *, headers: dict[str, str] | None = None, body: dict | None = None) -> dict:
     payload = json.dumps(body, ensure_ascii=False).encode() if body is not None else None
     req = urllib.request.Request(url, data=payload, headers={"User-Agent": "sociology-reading-archive/1.0", **(headers or {})})
-    with urllib.request.urlopen(req, timeout=45) as response:
+    with urllib.request.urlopen(req, timeout=API_TIMEOUT_SECONDS) as response:
         return json.load(response)
 
 
 def request_text(url: str) -> tuple[str, str]:
     req = urllib.request.Request(url, headers={"User-Agent": "sociology-reading-archive/1.0"})
-    with urllib.request.urlopen(req, timeout=45) as response:
+    with urllib.request.urlopen(req, timeout=HTML_TIMEOUT_SECONDS) as response:
         content_type = response.headers.get_content_type()
         if content_type not in {"text/html", "text/plain", "application/xhtml+xml"}:
             return "", content_type
@@ -248,7 +252,7 @@ def extract_pdf_text(url: str) -> str:
     if not safe_oa_hostname(url):
         return ""
     req = urllib.request.Request(url, headers={"User-Agent": "sociology-reading-archive/1.0"})
-    with urllib.request.urlopen(req, timeout=60) as response:
+    with urllib.request.urlopen(req, timeout=PDF_TIMEOUT_SECONDS) as response:
         data = response.read(20_000_000)
         if not (data.startswith(b"%PDF") or response.headers.get_content_type() == "application/pdf"):
             return ""
@@ -286,7 +290,8 @@ def add_evidence(candidate: dict) -> dict:
 def select_reading_candidate(candidates: list[dict], dois: set[str], titles: set[str]) -> dict | None:
     config = load_selection_config()
     ranked = rank_candidates(candidates, dois, titles, config)
-    for candidate in ranked[:config["retrieval"]["shortlist_size"]]:
+    attempt_limit = min(config["retrieval"]["shortlist_size"], config["retrieval"].get("max_full_text_attempts", 3))
+    for candidate in ranked[:attempt_limit]:
         enriched = add_evidence(candidate)
         if enriched["evidenceBasis"] == "全文" or not config["retrieval"]["require_parsed_full_text"]:
             enriched["learningFocus"] = config["weekly_focus"][today_taipei().strftime("%A")]
@@ -342,8 +347,13 @@ def deepseek_summary(candidate: dict, api_key: str) -> dict:
     expert_schema = {"fieldPosition": "领域定位", "literatureDialogue": ["文献对话"], "contentFeatures": [{"label": "内容特色", "detail": "分析"}], "theoreticalContribution": "理论贡献", "empiricalContribution": "经验贡献", "researchImplications": ["后续研究启发"]}
     reviewer_schema = {"method": "质性研究|定量研究|综述|混合研究", "methods": ["研究设计与数据"], "researchFeatures": [{"label": "研究特色", "detail": "分析"}], "criticalReview": ["批判性评价"], "methodologicalContribution": "方法贡献", "limits": ["局限"], "evidenceBoundaries": ["当前材料不能证明什么"]}
     common = "只能依据给定证据。若分析依据为摘要，禁止虚构样本量、变量、章节、引文、统计结果或全文论证；信息不足必须写‘当前证据未说明’。"
-    expert = deepseek_json(api_key, "你是该研究领域的资深社会学专家。" + common, "输出纯JSON并匹配模板：" + json.dumps(expert_schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False))
-    reviewer = deepseek_json(api_key, "你是严格的社会科学方法审稿人。" + common, "输出纯JSON并匹配模板：" + json.dumps(reviewer_schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False))
+    expert_args = (api_key, "你是该研究领域的资深社会学专家。" + common, "输出纯JSON并匹配模板：" + json.dumps(expert_schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False))
+    reviewer_args = (api_key, "你是严格的社会科学方法审稿人。" + common, "输出纯JSON并匹配模板：" + json.dumps(reviewer_schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False))
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        expert_future = executor.submit(deepseek_json, *expert_args)
+        reviewer_future = executor.submit(deepseek_json, *reviewer_args)
+        expert = expert_future.result()
+        reviewer = reviewer_future.result()
     schema = {"title": "中文标题", "topics": ["主题"], "recommendation": "面向社会学本科生的推荐理由", "question": "研究问题", "selectionSource": "选题如何形成", "articleStructure": ["由全文确认的文章结构"], "thesis": "核心论点", "theory": [{"name": "概念或理论", "detail": "定义、关系与机制"}], "chain": [{"label": "论证步骤", "detail": "证据如何支持命题"}], "findings": ["区分直接发现、解释与外推"], "highlights": [{"label": "亮点", "detail": "说明"}], "prerequisiteKnowledge": ["阅读前应了解的概念"], "readingGuide": {"quickRead": "30分钟快速阅读路线", "closeRead": "必须精读的部分", "canSkim": "可暂时略读的部分"}, "learningExercises": ["复述、论证图、证据判断或迁移练习"], "questions": ["研究者思考题"], "terms": [{"term": "术语", "definition": "定义"}]}
     synthesis_prompt = "你是社会学精读主编。整合证据、领域专家意见和方法审稿意见，输出纯JSON并严格匹配模板。不得新增证据中没有的事实。\n模板：" + json.dumps(schema, ensure_ascii=False) + "\n证据：" + json.dumps(evidence, ensure_ascii=False) + "\n领域专家：" + json.dumps(expert, ensure_ascii=False) + "\n方法审稿：" + json.dumps(reviewer, ensure_ascii=False)
     synthesis = deepseek_json(api_key, "建立可追溯的论断—证据链，明确事实、解释、外推和未知。", synthesis_prompt)

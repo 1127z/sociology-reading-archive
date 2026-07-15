@@ -6,6 +6,7 @@
     "openalex_rows": 100,
     "crossref_rows": 50,
     "shortlist_size": 6,
+    "max_full_text_attempts": 3,
     "min_selection_score": 65,
     "min_abstract_chars": 500,
     "min_full_text_chars": 5000,

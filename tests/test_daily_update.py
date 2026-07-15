@@ -1,6 +1,7 @@
 import importlib.util
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 SPEC = importlib.util.spec_from_file_location("daily_update", Path(__file__).parents[1] / "scripts" / "daily_update.py")
 MODULE = importlib.util.module_from_spec(SPEC)
@@ -91,6 +92,12 @@ class DailyUpdateTests(unittest.TestCase):
             self.assertGreaterEqual(selected["selectionScore"]["total"], 65)
             self.assertGreater(len(selected["evidenceText"]), 300)
             self.assertTrue(selected["sourceUrl"].startswith("https://"))
+
+    def test_full_text_attempts_are_bounded_before_fallback(self):
+        rows = [self.candidate(f"Study {index}", f"10.1/{index}") for index in range(5)]
+        with patch.object(MODULE, "add_evidence", side_effect=lambda row: {**row, "evidenceBasis": "摘要"}) as mocked:
+            self.assertIsNone(MODULE.select_reading_candidate(rows, set(), set()))
+        self.assertEqual(3, mocked.call_count)
 
 
 if __name__ == "__main__":
