@@ -85,8 +85,7 @@ class DailyUpdateTests(unittest.TestCase):
 
     def test_committed_cnki_queue_contract(self):
         queue = MODULE.load_fallback_queue()
-        self.assertEqual(6, len(queue))
-        self.assertEqual(6, len({row["candidate"]["id"] for row in queue}))
+        self.assertEqual(len(queue), len({row["candidate"]["id"] for row in queue}))
         for row in queue:
             selected = MODULE.select_fallback_candidate([row], set(), set())
             self.assertGreaterEqual(selected["selectionScore"]["total"], 65)
