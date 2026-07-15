@@ -81,6 +81,7 @@ jobs:
           npm test
           npm run build
       - name: Commit new reading
+        if: github.event_name != 'push'
         run: |
           if [ -z "$(git status --porcelain -- data/articles.generated.json data/cnki_fallback_queue.json public/documents/)" ]; then
             echo "::error::Daily task completed without publishing an article"
