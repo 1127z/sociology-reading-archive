@@ -1,35 +1,6 @@
 [
   {
     "candidate": {
-      "id": "cnki-internet-social-capital-2023",
-      "title": "互联网使用增加了个人社会资本吗？一个“工具—表达”价值的二元视角",
-      "authors": [
-        "姜俊丰"
-      ],
-      "journal": "社会发展研究",
-      "date": "2023-12-01",
-      "volume": "2023年第4期",
-      "pages": "103-126",
-      "doi": "",
-      "sourceUrl": "https://kns.cnki.net/kcms2/article/abstract?v=4Snn6dWjeT8T3KI6KnwgR-LAY4aH9mEue-uC9RmFAToc-knACq6vcz1dbIvPvP7bTvf0RRUbtcZ9h92nYPBMTHC4kPsxZUrAOQDatUM_ulYouXiObl6Th4hGHO0E3M0Jjp0S8SijNWQAxrz9F3cqNPd-RHJ9hIxTrg4ib8v8iZ2JsT-ir1DGPdH5uwT-xIHC&uniplatform=NZKPT&language=CHS",
-      "language": "中文",
-      "selectionScore": {
-        "total": 73,
-        "difficulty": "L3",
-        "breakdown": {
-          "teaching_value": 18,
-          "professional_importance": 16,
-          "readability": 9,
-          "research_training": 15,
-          "source_quality": 8,
-          "full_text_availability": 7
-        }
-      },
-      "evidenceText": "全文核验记录：论文回应互联网究竟增加还是削弱社会资本的争论，提出不能只比较是否上网，还应把互联网功能与社会资本维度对应起来。理论依据包括布迪厄和林南的社会资本论、数字鸿沟的接入沟—使用沟—收益沟框架，以及工具性行动与表达性行动区分。数据为CGSS 2017互联网与社会网络模块；完整分析样本3432人，互联网功能分析中的上网者样本1889人。互联网使用分为是否使用、使用频率和功能；社交、自我展示、休闲娱乐构成表达性功能，网络行动、获取信息、商务交易构成工具性功能。社会资本结构面向用职业位置生成法的网顶、网差、网模测量，关系强度用亲友邻里互动等题项形成指标。基准方法为线性回归；研究进一步采用逆概率加权、两阶段最小二乘工具变量和Heckman样本选择模型处理选择偏误、联立偏误与仅上网者回答功能题的问题。论文报告互联网使用总体关联更多社会资本；工具性功能主要扩展关系结构，表达性功能主要增强关系强度；中老年和低教育群体在接入和收益上处于不利位置。研究亮点是把功能价值与资本维度进行理论匹配。证据边界：工具变量外生性与Heckman排除限制需要额外假设；横截面数据难以完整观察社会网络长期变化；功能分类由问卷项目归并，不能覆盖全部网络实践。"
-    }
-  },
-  {
-    "candidate": {
       "id": "cnki-meme-culture-sociology-2026",
       "title": "“梗”：当代网络文化的社会学考察",
       "authors": [
